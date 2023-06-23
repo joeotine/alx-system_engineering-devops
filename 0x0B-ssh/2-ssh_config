@@ -1,0 +1,5 @@
+# config file to connect to server without requiring a passphrase everytime
+
+Host *
+	passwordAuthentification no
+	IdentityFile ~/.ssh/school
