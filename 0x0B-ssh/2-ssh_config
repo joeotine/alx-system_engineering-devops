@@ -1,5 +1,5 @@
-# config file to connect to server without requiring a passphrase everytime
-
-Host *
-	passwordAuthentification no
-	IdentityFile ~/.ssh/school
+Host server1
+    HostName 54.83.129.150
+    User ubuntu
+    IdentityFile ~/.ssh/school
+    PasswordAuthentication no
