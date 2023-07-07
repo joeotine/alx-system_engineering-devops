@@ -36,10 +36,15 @@ defaults
 frontend  joeotine
         bind *:80
         mode http
-        default_backend joeotine
+        http-request set-header X-Forwarded-Proto http
+        default_backend joeotine-backend
 
-backend joeotine
+frontend joeotine-frontend-https
+        bind *:443 ssl crt /etc/haproxy/certs/www.joeotine.tech.pem
+        http-request set-header X-Forwarded-Proto https
+        default_backend joeotine-backend
+
+backend joeotine-backend
         balance roundrobin
         server 198887-web-01 54.210.122.145:80 check
         server 198887-web-02 54.90.14.168:80 check
-
