@@ -16,13 +16,13 @@ On 10th August 2023 (12 am GMT + 3), we experienced a server outage (downtime) o
 | Time (GMT + 3) | Actions |
 | -------------- | -------- |
 | 12:45 AM | Upgrades implementation begins |
-| 01:00AM | Server Outage begins |
-| 01:00AM | Pagers alerted on-call team |
-| 01:10AM | On-call team acknowledgement |
-| 01:15AM | Rollback initiation begins |
-| 01:20AM | Successful rollback|
-| 01:20AM | Server restart initiated|
-| 01:22AM | 100% of traffic back online |
+| 01:00 AM | Server Outage begins |
+| 01:00 AM | Pagers alerted on-call team |
+| 01:10 AM | On-call team acknowledgement |
+| 01:15 AM | Rollback initiation begins |
+| 01:20 AM | Successful rollback|
+| 01:20 AM | Server restart initiated|
+| 01:22 AM | 100% of traffic back online |
 
 ## Root cause
 ![](https://blog.systemsengineering.com/hs-fs/hubfs/blog-files/Root%20Cause.jpg?width=600&name=Root%20Cause.jpg)
