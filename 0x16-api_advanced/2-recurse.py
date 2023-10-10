@@ -1,28 +1,40 @@
 #!/usr/bin/python3
 """
-Using reddit's API
+    Is a module that contains a function that queries the
+    Reddit API and returns a list of the hottest post for
+    a given subreddit.
 """
 import requests
-after = None
 
 
-def recurse(subreddit, hot_list=[]):
-    """returning top ten post titles recursively"""
-    global after
-    user_agent = {'User-Agent': 'api_advanced-project'}
-    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
-    parameters = {'after': after}
-    results = requests.get(url, params=parameters, headers=user_agent,
-                           allow_redirects=False)
+def recurse(subreddit, hot_list=[], after=None):
+    """
+       It returns a list of the hottest posts of a subreddit
+        or None
+    """
+    u_agent = {'User-Agent': '/u/Suspicious-Jelly920'}
+    url = 'https://api.reddit.com/r/{}/hot?after={}'.format(subreddit, after)
+    res = requests.get(url,  headers=u_agent)
+    h_list = []
+    if res.status_code == 200:
+        hottest = res.json()["data"]["children"]
+        after = res.json()["data"]["after"]
 
-    if results.status_code == 200:
-        after_data = results.json().get("data").get("after")
-        if after_data is not None:
-            after = after_data
-            recurse(subreddit, hot_list)
-        all_titles = results.json().get("data").get("children")
-        for title_ in all_titles:
-            hot_list.append(title_.get("data").get("title"))
-        return hot_list
+        if after is None:
+            h_list = get_children(hottest, len(hottest))
+            return h_list
+        h_list.append(recurse(subreddit, h_list, after=after))
+        h_list = get_children(hottest, len(hottest))
     else:
-        return (None)
+        return None
+    return h_list
+
+
+def get_children(h_list, count, new_hlist=[]):
+    """
+        gets the children from the data
+    """
+    if count == 0:
+        return new_hlist
+    new_hlist.append(h_list[count - 1]["data"]["title"])
+    return (get_children(h_list, count - 1, new_hlist))
