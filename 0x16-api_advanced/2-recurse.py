@@ -1,40 +1,32 @@
 #!/usr/bin/python3
-"""
-    Is a module that contains a function that queries the
-    Reddit API and returns a list of the hottest post for
-    a given subreddit.
-"""
+"""Is a recursive function that queries the Reddit API and returns
+ a list containing the titles of all hot articles for a given subreddit. """
+
 import requests
 
 
-def recurse(subreddit, hot_list=[], after=None):
-    """
-       It returns a list of the hottest posts of a subreddit
-        or None
-    """
-    u_agent = {'User-Agent': '/u/Suspicious-Jelly920'}
-    url = 'https://api.reddit.com/r/{}/hot?after={}'.format(subreddit, after)
-    res = requests.get(url,  headers=u_agent)
-    h_list = []
-    if res.status_code == 200:
-        hottest = res.json()["data"]["children"]
-        after = res.json()["data"]["after"]
-
-        if after is None:
-            h_list = get_children(hottest, len(hottest))
-            return h_list
-        h_list.append(recurse(subreddit, h_list, after=after))
-        h_list = get_children(hottest, len(hottest))
-    else:
+def recurse(subreddit, hot_list=[], after="", count=0):
+    """Returns a list of titles of all hot posts on a given subreddit."""
+    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
+    headers = {
+        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
+    }
+    params = {
+        "after": after,
+        "count": count,
+        "limit": 100
+    }
+    response = requests.get(url, headers=headers, params=params,
+                            allow_redirects=False)
+    if response.status_code == 404:
         return None
-    return h_list
 
+    results = response.json().get("data")
+    after = results.get("after")
+    count += results.get("dist")
+    for c in results.get("children"):
+        hot_list.append(c.get("data").get("title"))
 
-def get_children(h_list, count, new_hlist=[]):
-    """
-        gets the children from the data
-    """
-    if count == 0:
-        return new_hlist
-    new_hlist.append(h_list[count - 1]["data"]["title"])
-    return (get_children(h_list, count - 1, new_hlist))
+    if after is not None:
+        return recurse(subreddit, hot_list, after, count)
+    return hot_list
